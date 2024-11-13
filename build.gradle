@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.lucaf'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.jcraft:jsch:0.1.55'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks {
+    shadowJar {
+        archiveFileName.set("ZipFileStreamUploader.jar")
+        manifest {
+            attributes["Main-Class"] = "ZipFileStreamUploader"
+        }
+    }
+}
