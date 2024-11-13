@@ -9,15 +9,16 @@ import java.util.zip.ZipOutputStream;
 public class Upload {
     public static void upload(Path uploadDir, String zipFile) throws IOException {
         SFTP sftp = new SFTP(
-                System.getenv("SFTP_HOST"),
-                System.getenv("SFTP_USER"),
-                System.getenv("SFTP_PASSWORD"),
-                Integer.parseInt(System.getenv("SFTP_PORT"))
+                ZipFileStreamUploader.dotenv.get("SFTP_HOST"),
+                ZipFileStreamUploader.dotenv.get("SFTP_USER"),
+                ZipFileStreamUploader.dotenv.get("SFTP_PASSWORD"),
+                Integer.parseInt(ZipFileStreamUploader.dotenv.get("SFTP_PORT","22"))
         );
         if (!sftp.connect()) {
             System.out.println("Failed to connect to SFTP server");
             return;
         }
+        System.out.println("Connected to SFTP server");
         OutputStream sftpOutputStream = sftp.getFileOutputStream(zipFile);
         ZipOutputStream zipOut = new ZipOutputStream(sftpOutputStream);
         File directory = uploadDir.toFile();
@@ -36,8 +37,9 @@ public class Upload {
             if (file.isDirectory()) {
                 addFilesToZip(file, zipOut);
             } else {
+                System.out.println("Adding file: " + file.getPath());
                 FileInputStream fileIn = new FileInputStream(file);
-                ZipEntry zipEntry = new ZipEntry(file.getName());
+                ZipEntry zipEntry = new ZipEntry(file.getPath());
                 zipOut.putNextEntry(zipEntry);
 
                 byte[] buffer = new byte[4096];

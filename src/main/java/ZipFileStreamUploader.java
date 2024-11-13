@@ -1,7 +1,10 @@
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.io.IOException;
 import java.nio.file.Path;
 
 public class ZipFileStreamUploader {
+    public static Dotenv dotenv = Dotenv.load();
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: java -jar ZipFileStreamUploader.jar <option> [args]");
@@ -25,11 +28,11 @@ public class ZipFileStreamUploader {
                 System.out.println("Usage: java -jar ZipFileStreamUploader.jar download <zipFile> <downloadDir> [zipEntry]");
                 return;
             }
-            /*try {
-                Download.download(Path.of(args[2]), args[1], args.length > 3 ? args[3] : null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+            Download.download(
+                    args[1],
+                    Path.of(args[2]),
+                    args.length > 3 ? args[3] : ""
+            );
         }
     }
 

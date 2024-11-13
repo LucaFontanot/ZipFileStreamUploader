@@ -1,5 +1,6 @@
 import com.jcraft.jsch.*;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 
 public class SFTP {
@@ -39,6 +40,14 @@ public class SFTP {
     public OutputStream getFileOutputStream(String path) {
         try {
             return sftpChannel.put(path, ChannelSftp.OVERWRITE);
+        } catch (SftpException e) {
+            return null;
+        }
+    }
+
+    public InputStream getFileInputStream(String path) {
+        try {
+            return sftpChannel.get(path);
         } catch (SftpException e) {
             return null;
         }
